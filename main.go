@@ -39,7 +39,7 @@ func main() {
 }
 
 func loadData() {
-	jsonFile, err := os.Open("./idiom.json")
+	jsonFile, err := os.Open("/idiom.json")
 	if err != nil {
 		fmt.Println(err)
 	}
