@@ -39,7 +39,7 @@ func main() {
 }
 
 func loadData() {
-	jsonFile, err := os.Open("idiom.json")
+	jsonFile, err := os.Open("./idiom.json")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -112,7 +112,7 @@ func startHttpServer() {
 	// 初始化
 	srv := &http.Server{
 		Handler:      router,
-		Addr:         ":80",
+		Addr:         ":8099",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
