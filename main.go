@@ -1,13 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
+	"strings"
 	"time"
 )
 
@@ -38,16 +40,36 @@ func main() {
 	startHttpServer()
 }
 
-func loadData() {
-	jsonFile, err := os.Open("/idiom.json")
+func ReadTxtData(filePath string) map[string]interface{} {
+	resp, err := http.Get(filePath)
+	defer resp.Body.Close()
+	reader := bufio.NewReaderSize(resp.Body, 1024*32)
+
 	if err != nil {
-		fmt.Println(err)
+		return nil
+	}
+	hashMapData := map[string]interface{}{}
+	for {
+		b, errR := reader.ReadBytes('\n') //按照行读取，遇到\n结束读取
+		if errR != nil {
+			if errR == io.EOF {
+				break
+			}
+			fmt.Println(errR.Error())
+		}
+		lineData := strings.TrimSuffix(strings.TrimSuffix(string(b), "\n"), "\r")
+		if len(lineData) > 0 {
+			hashMapData[lineData] = "1"
+		}
 	}
 
-	// 要记得关闭
-	defer jsonFile.Close()
+	return hashMapData
+}
 
-	byteValue, _ := ioutil.ReadAll(jsonFile)
+func loadData() {
+	resp, _ := http.Get("https://prod-5gyof4h4c76fbbb0-1314546300.tcloudbaseapp.com/idiom.json?sign=0769353a23072a9ab57d0b977667e192&t=1666530118")
+	defer resp.Body.Close()
+	byteValue, _ := ioutil.ReadAll(resp.Body)
 
 	idiomList := make([]Idiom, 0)
 	json.Unmarshal([]byte(byteValue), &idiomList)
