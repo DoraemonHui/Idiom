@@ -36,9 +36,6 @@ func main() {
 		loadData()
 	}
 	startHttpServer()
-
-	idiom := findValidIdiom("为")
-	fmt.Println(idiom)
 }
 
 func loadData() {
