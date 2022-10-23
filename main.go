@@ -115,7 +115,7 @@ func startHttpServer() {
 	// 初始化
 	srv := &http.Server{
 		Handler:      router,
-		Addr:         ":8099",
+		Addr:         ":80",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
